@@ -3,213 +3,766 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مسابقة أحلى بارت 🏆</title>
+    <title>مسابقة احلى بارت 🎶✨</title>
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: #fff;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.2s ease; }
+        body { 
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); 
+            color: #fff; margin: 0; padding: 20px; 
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; 
+            position: relative;
         }
-        .container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 25px;
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        
+        .container { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 20px; padding: 25px; width: 100%; max-width: 500px; 
+            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
         }
-        h1 { color: #f39c12; margin-bottom: 10px; }
-        p { color: #ddd; margin-bottom: 20px; font-size: 14px; }
-        .candidate-card {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 12px 15px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+
+        .container.owner-container {
+            max-width: 850px !important;
         }
-        .candidate-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-align: right;
-            flex-grow: 1;
+
+        h1 { color: #ffa502; font-size: 2rem; margin-top: 0; text-shadow: 0 2px 10px rgba(255,165,2,0.3); }
+        .step-indicator { font-size: 0.9rem; color: #ffa502; font-weight: bold; margin-bottom: 15px; }
+        
+        .page { display: none; }
+        .page.active { display: block; animation: slideUp 0.3s ease-out; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .candidate-info img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #f39c12;
+
+        .welcome-box { padding: 20px 10px; }
+        .welcome-icon { font-size: 4rem; margin-bottom: 15px; }
+        .welcome-desc { color: #dcdde1; font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px; }
+
+        .card { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 20px; border: 1px solid rgba(255,255,255,0.08); }
+        
+        /* تعديل حجم الصور تلقائياً */
+        .card img { 
+            width: 100%; 
+            height: auto; 
+            max-height: 350px; 
+            object-fit: contain; 
+            border-radius: 10px; 
+            margin-bottom: 15px; 
         }
-        .candidate-details {
-            flex-grow: 1;
+
+        .card h2 { color: #ffffff; margin: 5px 0; font-size: 1.5rem; }
+        .song-title { color: #70a1ff; font-size: 1rem; margin-bottom: 15px; }
+        audio { width: 100%; margin-bottom: 10px; outline: none; }
+
+        .btn-nav {
+            background: linear-gradient(45deg, #3742fa, #5352ed); color: white; border: none; padding: 12px 20px;
+            border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer;
+            width: 100%; margin-top: 10px; box-shadow: 0 4px 15px rgba(55,66,250,0.3);
         }
-        .candidate-details h3 {
-            margin: 0 0 5px 0;
-            font-size: 16px;
+        .btn-nav:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(55,66,250,0.5); }
+        .btn-prev { background: linear-gradient(45deg, #57606f, #747d8c); box-shadow: none; }
+
+        .login-box { margin: 15px 0; text-align: right; }
+        .login-box label { display: block; margin-bottom: 5px; font-weight: bold; color: #ffa502; }
+        .input-field {
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.4); color: #fff; font-size: 1rem; margin-bottom: 10px; outline: none;
         }
-        audio {
-            width: 100%;
-            height: 32px;
+
+        .user-detected-badge {
+            background: rgba(46, 213, 115, 0.15); border: 1px solid #2ed573; color: #2ed573;
+            padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; font-size: 1.05rem;
+            margin-top: 10px; display: none;
         }
-        .vote-btn {
-            background: #f39c12;
-            color: #000;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            white-space: nowrap;
-            margin-right: 10px;
+
+        .vote-options { text-align: right; margin: 20px 0; }
+        .vote-option {
+            background: rgba(255, 255, 255, 0.08); padding: 12px; border-radius: 10px; margin-bottom: 10px;
+            display: flex; align-items: center; cursor: pointer; border: 2px solid transparent;
         }
-        .vote-btn:hover { background: #e67e22; }
-        .vote-btn:disabled { background: #555; color: #aaa; cursor: not-allowed; }
-        .msg { margin-top: 15px; font-weight: bold; color: #2ecc71; font-size: 14px; }
+        .vote-option:hover { border-color: #ffa502; background: rgba(255, 165, 2, 0.1); }
+        .vote-option input { margin-left: 10px; accent-color: #ffa502; transform: scale(1.2); }
+        .vote-option label { cursor: pointer; width: 100%; font-size: 1.1rem; }
+
+        .btn-submit-vote { background: linear-gradient(45deg, #ffa502, #ff7f50); box-shadow: 0 4px 15px rgba(255,165,2,0.4); font-size: 1.1rem; }
+        .btn-visitor { background: linear-gradient(45deg, #eccc68, #ff7f50); color: #000; margin-top: 10px; }
+        .btn-reset { background: linear-gradient(45deg, #ff4757, #d63031); color: #fff; font-size: 0.9rem; }
+        .btn-add { background: linear-gradient(45deg, #2ed573, #1e90ff); color: #fff; }
+
+        .result-item { background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; margin-bottom: 10px; text-align: right; }
+        .result-info { display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 5px; }
+        .bar-bg { background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px; overflow: hidden; }
+        .bar-fill { background: linear-gradient(90deg, #ffa502, #2ed573); height: 100%; width: 0%; border-radius: 5px; }
+
+        .admin-item {
+            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 12px; border-radius: 8px; margin-bottom: 8px;
+            display: flex; justify-content: space-between; align-items: center; text-align: right;
+        }
+        .admin-item-info { font-size: 0.9rem; }
+        .admin-item-info strong { color: #ffa502; display: block; font-size: 1rem; }
+        .admin-btn-group { display: flex; gap: 5px; }
+        .btn-mini { padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; }
+        .btn-mini-edit { background: #ffa502; color: #000; }
+        .btn-mini-delete { background: #ff4757; color: #fff; }
+
+        .owner-tabs {
+            display: flex; gap: 8px; margin-bottom: 15px; justify-content: center; flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ccc; padding: 10px 16px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.9rem;
+        }
+        .tab-btn.active {
+            background: #ffa502; color: #000; border-color: #ffa502; box-shadow: 0 4px 12px rgba(255,165,2,0.3);
+        }
+
+        .tab-content { display: none; text-align: right; }
+        .tab-content.active { display: block; animation: slideUp 0.2s ease-out; }
+
+        .single-display-box {
+            background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 15px; padding: 20px; min-height: 250px;
+        }
+
+        .log-item {
+            background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; margin-bottom: 8px;
+            text-align: right; font-size: 0.9rem; border-right: 4px solid #1e90ff;
+        }
+        .log-item.visitor-item { border-right-color: #eccc68; }
+        .log-item strong { color: #ffa502; }
+        .log-details { font-size: 0.75rem; color: #aaa; margin-top: 5px; display: flex; justify-content: space-between; }
+        .device-tag { color: #2ed573; font-weight: bold; }
+
+        .hidden-owner-btn {
+            position: fixed; bottom: 10px; left: 10px; opacity: 0.2;
+            font-size: 0.8rem; cursor: pointer; user-select: none; padding: 5px; border-radius: 5px;
+        }
+        .hidden-owner-btn:hover { opacity: 0.8; background: rgba(255,255,255,0.1); }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-card {
+            background: rgba(30, 27, 61, 0.95); border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 15px; padding: 20px; width: 90%; max-width: 380px;
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            max-height: 85vh; overflow-y: auto;
+        }
+        .modal-card h3 { margin-top: 0; color: #ffa502; font-size: 1.2rem; }
+        .modal-card p { color: #dcdde1; font-size: 0.95rem; margin-bottom: 15px; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 15px; }
+        .modal-btn { flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
+        .modal-btn-confirm { background: linear-gradient(45deg, #ffa502, #ff7f50); color: white; }
+        .modal-btn-cancel { background: rgba(255,255,255,0.2); color: #fff; }
     </style>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
-<div class="container">
-    <h1>🏆 مسابقة أحلى بارت</h1>
-    <p>استمع للبارتات وصوت لأفضل بارت (يحق لك التصويت مرة واحدة فقط)</p>
-    
-    <div id="candidates-list">
-        <!-- دحوم -->
-        <div class="candidate-card">
-            <div class="candidate-info">
-                <img src="dahoom.jpg" alt="دحوم">
-                <div class="candidate-details">
-                    <h3>دحوم</h3>
-                    <audio controls src="dahoom.mp3"></audio>
-                </div>
-            </div>
-            <button class="vote-btn" onclick="vote('دحوم')">صوت</button>
-        </div>
+<div class="container" id="main-container">
+    <h1>🏆 مسابقة احلى بارت</h1>
 
-        <!-- حربي -->
-        <div class="candidate-card">
-            <div class="candidate-info">
-                <img src="harbi.jpg" alt="حربي">
-                <div class="candidate-details">
-                    <h3>حربي</h3>
-                    <audio controls src="harbi.mp3"></audio>
-                </div>
-            </div>
-            <button class="vote-btn" onclick="vote('حربي')">صوت</button>
-        </div>
-
-        <!-- حسون -->
-        <div class="candidate-card">
-            <div class="candidate-info">
-                <img src="hassoon.jpg" alt="حسون">
-                <div class="candidate-details">
-                    <h3>حسون</h3>
-                    <audio controls src="hassoon.mp3"></audio>
-                </div>
-            </div>
-            <button class="vote-btn" onclick="vote('حسون')">صوت</button>
-        </div>
-
-        <!-- خليفه -->
-        <div class="candidate-card">
-            <div class="candidate-info">
-                <img src="khalifa.jpg" alt="خليفه">
-                <div class="candidate-details">
-                    <h3>خليفه</h3>
-                    <audio controls src="khalifa.mp3"></audio>
-                </div>
-            </div>
-            <button class="vote-btn" onclick="vote('خليفه')">صوت</button>
-        </div>
-
-        <!-- شاهين -->
-        <div class="candidate-card">
-            <div class="candidate-info">
-                <img src="shahin.jpg" alt="شاهين">
-                <div class="candidate-details">
-                    <h3>شاهين</h3>
-                    <audio controls src="shahin.mp3"></audio>
-                </div>
-            </div>
-            <button class="vote-btn" onclick="vote('شاهين')">صوت</button>
-        </div>
-
-        <!-- يوسف جبر -->
-        <div class="candidate-card">
-            <div class="candidate-info">
-                <img src="yousef.jpg" alt="يوسف جبر">
-                <div class="candidate-details">
-                    <h3>يوسف جبر</h3>
-                    <audio controls src="yousef.mp3"></audio>
-                </div>
-            </div>
-            <button class="vote-btn" onclick="vote('يوسف جبر')">صوت</button>
-        </div>
-
-        <!-- زيد الخالدي -->
-        <div class="candidate-card">
-            <div class="candidate-info">
-                <img src="zaid.jpg" alt="زيد الخالدي">
-                <div class="candidate-details">
-                    <h3>زيد الخالدي</h3>
-                    <audio controls src="zaid.mp3"></audio>
-                </div>
-            </div>
-            <button class="vote-btn" onclick="vote('زيد الخالدي')">صوت</button>
+    <!-- 1. صفحة الترحيب -->
+    <div class="page active" id="page-welcome">
+        <div class="welcome-box">
+            <div class="welcome-icon">🎧✨</div>
+            <p class="welcome-desc">أهلاً بك في مسابقة **احلى بارت**! اسمع كل المقاطع المشاركة من الشباب ثم اختر المقطع الأفضل بكل حيادية.</p>
+            <button class="btn-nav btn-submit-vote" onclick="startApp()">ابدأ الاستماع والتصويت 🎶</button>
         </div>
     </div>
 
-    <div id="status-msg" class="msg"></div>
+    <!-- 2. صفحات الأغاني -->
+    <div id="pages-container"></div>
+
+    <!-- 3. صفحة التصويت -->
+    <div class="page" id="page-vote">
+        <div class="step-indicator">الخطوة الأخيرة: التصويت</div>
+        <h2>اختر صاحب احلى بارت 🏆</h2>
+        
+        <div class="login-box">
+            <label>1. أدخل كلمة المرور الخاصة بك:</label>
+            <input type="password" id="user-pass" class="input-field" placeholder="أدخل رمزك هنا..." oninput="autoDetectUser()">
+            <div id="user-detected-box" class="user-detected-badge"></div>
+        </div>
+
+        <label style="display:block; text-align:right; font-weight:bold; color:#ffa502; margin-top:15px;">2. اختر من تصوت له:</label>
+        <div class="vote-options" id="vote-form-options"></div>
+
+        <button class="btn-nav btn-submit-vote" onclick="submitVote()">تأكيد التصويت 🗳️</button>
+        <button class="btn-nav btn-visitor" onclick="showResults()">👀 مشاهدة النتائج فقط (كزائر)</button>
+        <button class="btn-nav btn-prev" onclick="changePage(-1)">⬅️ الرجوع للأغاني</button>
+    </div>
+
+    <!-- 4. صفحة النتائج (للزوار والأعضاء) -->
+    <div class="page" id="page-results">
+        <h2>📊 نتائج الأصوات الحالية</h2>
+        <div id="results-display"></div>
+        <div class="total-count" id="total-votes-text" style="color:#2ed573; font-weight:bold; margin-top:10px;"></div>
+        <button class="btn-nav btn-prev" style="margin-top:20px;" onclick="goToVotePage()">⬅️ العودة لصفحة التصويت</button>
+    </div>
+
+    <!-- 5. صفحة المالك بنظام التبويبات المنفصلة -->
+    <div class="page" id="page-owner">
+        <h2 style="color:#ffa502; margin-bottom:5px;">⚙️ لوحة تحكم المالك</h2>
+        <p style="color:#ccc; font-size:0.85rem; margin-top:0; margin-bottom:15px;">اختر القائمة التي تريد عرضها فقط:</p>
+
+        <div class="owner-tabs">
+            <button class="tab-btn active" onclick="switchOwnerTab('tab-friends', this)">👥 المتسابقين</button>
+            <button class="tab-btn" onclick="switchOwnerTab('tab-logs', this)">📜 سجل الأصوات</button>
+            <button class="tab-btn" onclick="switchOwnerTab('tab-visitors', this)">👀 زوار الرابط</button>
+            <button class="tab-btn" onclick="switchOwnerTab('tab-settings', this)">⚡ التحكم والإعدادات</button>
+        </div>
+
+        <div class="single-display-box">
+            <!-- قائمة المتسابقين منفردة -->
+            <div class="tab-content active" id="tab-friends">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <h3 style="color:#2ed573; margin:0;">قائمة المتسابقين</h3>
+                    <button class="btn-nav btn-add" style="margin:0; width:auto; padding:6px 12px; font-size:0.85rem;" onclick="openAddFriendModal()">➕ إضافة متسابق</button>
+                </div>
+                <div id="manage-friends-list"></div>
+            </div>
+
+            <!-- سجل الأصوات منفرد -->
+            <div class="tab-content" id="tab-logs">
+                <h3 style="color:#1e90ff; margin-top:0; margin-bottom:12px;">سجل تفاصيل التصويت</h3>
+                <div id="logs-display"></div>
+            </div>
+
+            <!-- سجل الزوار منفرد -->
+            <div class="tab-content" id="tab-visitors">
+                <h3 style="color:#eccc68; margin-top:0; margin-bottom:12px;">سجل من فتح الرابط</h3>
+                <div id="visitors-display"></div>
+            </div>
+
+            <!-- الإعدادات وتصفير البيانات منفرد -->
+            <div class="tab-content" id="tab-settings">
+                <h3 style="color:#ffa502; margin-top:0; margin-bottom:12px;">إعدادات الإدارة</h3>
+                <div style="display:flex; flex-direction:column; gap:12px; margin-top:20px;">
+                    <button class="btn-nav" style="background:#3742fa; margin:0;" onclick="restoreDefaultFriends()">🔄 استعادة الأسماء الأساسية</button>
+                    <button class="btn-nav btn-reset" style="margin:0;" onclick="confirmResetAll()">⚠️ تصفير الأصوات والسجلات نهائياً</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-nav btn-prev" style="margin-top:20px; max-width: 250px;" onclick="goToVotePage()">⬅️ خروج لصفحة التصويت</button>
+    </div>
 </div>
 
+<!-- النافذة المنبثقة -->
+<div class="modal-overlay" id="custom-modal">
+    <div class="modal-card">
+        <h3 id="modal-title">تنبيه</h3>
+        <div id="modal-body-content">
+            <p id="modal-msg"></p>
+            <div id="modal-input-container" style="display:none;">
+                <input type="password" id="modal-input" class="input-field" placeholder="أدخل كلمة المرور..." onkeyup="if(event.key==='Enter') document.getElementById('modal-btn-ok').click()">
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="modal-btn modal-btn-confirm" id="modal-btn-ok">حسناً</button>
+            <button class="modal-btn modal-btn-cancel" id="modal-btn-cancel" style="display:none;">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<!-- زر المالك المخفي -->
+<div class="hidden-owner-btn" onclick="openOwnerPanel()">🔒</div>
+
 <script>
-    // عند تحميل الصفحة: نسمح للجميع بالدخول والاستماع للمقاطع بحرية
-    window.addEventListener('DOMContentLoaded', () => {
-        const hasVoted = localStorage.getItem('hasVoted');
-        if (hasVoted) {
-            lockVotingButtons('لقد قمت بالتصويت من قبل. يمكنك الاستماع للمقاطع متى شئت، ولكن لا يمكنك التصويت مرة أخرى.');
+    const firebaseConfig = {
+        apiKey: "AIzaSyCsU1_57IeHsRd56tAII5v_suvPUYl880s",
+        authDomain: "vote-7ef2e.firebaseapp.com",
+        databaseURL: "https://vote-7ef2e-default-rtdb.firebaseio.com",
+        projectId: "vote-7ef2e",
+        storageBucket: "vote-7ef2e.firebasestorage.app",
+        messagingSenderId: "465735711322",
+        appId: "1:465735711322:web:89a9ae6cf07375579c7663"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const defaultFriendsObj = {
+        "dahoom": { id: "dahoom", name: "دحوم", pass: "da123", songName: "اشوف فيه مخنوق", img: "dahoom.jpg", song: "dahoom.mp3" },
+        "harbi": { id: "harbi", name: "حربي", pass: "ha123", songName: "الك حنيت", img: "harbi.jpg", song: "harbi.mp3" },
+        "hassoon": { id: "hassoon", name: "حسون", pass: "has123", songName: "شلون بيه", img: "hassoon.jpg", song: "hassoon.mp3" },
+        "khalifa": { id: "khalifa", name: "خليفه", pass: "kh123", songName: "والله حرام يروح على الفاضي تعبي", img: "khalifa.jpg", song: "khalifa.mp3" },
+        "shahin": { id: "shahin", name: "شاهين", pass: "sh123", songName: "جنا شعب واحد وطن مرتاح", img: "shahin.jpg", song: "shahin.mp3" },
+        "yousef": { id: "yousef", name: "يوسف جبر", pass: "brx502", songName: "كتبت اسمك على الحيطان", img: "yousef.jpg", song: "yousef.mp3" },
+        "zaid": { id: "zaid", name: "زيد الخالدي", pass: "zaid123", songName: "يا ناس", img: "zaid.jpg", song: "zaid.mp3" }
+    };
+
+    let friends = [];
+    const ADMIN_PASSWORD = "brx502";
+    let currentPage = -1;
+
+    db.ref('custom_friends').on('value', (snapshot) => {
+        const customData = snapshot.val();
+        if (!customData || Object.keys(customData).length < 2) {
+            db.ref('custom_friends').set(defaultFriendsObj);
+            friends = Object.values(defaultFriendsObj);
+        } else {
+            friends = Object.values(customData);
         }
+        renderUI();
     });
 
-    function vote(candidateName) {
-        const hasVoted = localStorage.getItem('hasVoted');
+    function switchOwnerTab(tabId, btnElement) {
+        document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(tb => tb.classList.remove('active'));
         
-        if (hasVoted) {
-            alert('عفواً، لقد قمت بالتصويت مسبقاً ولا يمكنك التصويت أكثر من مرة!');
+        document.getElementById(tabId).classList.add('active');
+        btnElement.classList.add('active');
+    }
+
+    function autoDetectUser() {
+        const passInput = document.getElementById('user-pass').value.trim();
+        const badge = document.getElementById('user-detected-box');
+        const detectedUser = friends.find(f => f.pass === passInput);
+
+        if (detectedUser) {
+            badge.style.display = 'block';
+            badge.innerText = `أهلاً بك يا ${detectedUser.name} 👋`;
+        } else {
+            badge.style.display = 'none';
+            badge.innerText = '';
+        }
+    }
+
+    function restoreDefaultFriends() {
+        db.ref('custom_friends').set(defaultFriendsObj).then(() => {
+            showAlert("تمت الاستعادة", "تمت استعادة جميع المتسابقين الأساسيين بنجاح!");
+        });
+    }
+
+    function renderUI() {
+        const pagesContainer = document.getElementById('pages-container');
+        const voteOptionsContainer = document.getElementById('vote-form-options');
+        const manageList = document.getElementById('manage-friends-list');
+
+        pagesContainer.innerHTML = '';
+        voteOptionsContainer.innerHTML = '';
+        if (manageList) manageList.innerHTML = '';
+
+        friends.forEach((f, index) => {
+            pagesContainer.innerHTML += `
+                <div class="page" id="page-${index}">
+                    <div class="step-indicator">المقطع (${index + 1} من ${friends.length})</div>
+                    <div class="card">
+                        <img src="${f.img}" onerror="this.src='https://via.placeholder.com/300x200/2f3542/ffffff?text=${encodeURIComponent(f.name)}'" alt="${f.name}">
+                        <h2>${f.name}</h2>
+                        <div class="song-title">🎵 ${f.songName}</div>
+                        <audio controls src="${f.song}"></audio>
+                    </div>
+                    <button class="btn-nav" onclick="changePage(1)">التالي ⬅️</button>
+                    <button class="btn-nav btn-prev" onclick="changePage(-1)">السابق ➡️</button>
+                </div>
+            `;
+
+            voteOptionsContainer.innerHTML += `
+                <div class="vote-option" onclick="document.getElementById('radio-${f.id}').checked = true">
+                    <input type="radio" name="votedCandidate" id="radio-${f.id}" value="${f.id}">
+                    <label for="radio-${f.id}">${f.name}</label>
+                </div>
+            `;
+
+            if (manageList) {
+                manageList.innerHTML += `
+                    <div class="admin-item">
+                        <div class="admin-item-info">
+                            <strong>${f.name}</strong>
+                            <small>🎵 ${f.songName} | 🔑 ${f.pass}</small>
+                        </div>
+                        <div class="admin-btn-group">
+                            <button class="btn-mini btn-mini-edit" onclick="openEditFriendModal('${f.id}')">تعديل ✏️</button>
+                            <button class="btn-mini btn-mini-delete" onclick="confirmDeleteFriend('${f.id}', '${f.name}')">حذف 🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    }
+
+    function openAddFriendModal() {
+        document.getElementById('modal-title').innerText = "➕ إضافة متسابق جديد";
+        document.getElementById('modal-body-content').innerHTML = `
+            <input type="text" id="add-id" class="input-field" placeholder="المعرف (مثال: ali) بالإنجليزية">
+            <input type="text" id="add-name" class="input-field" placeholder="الاسم الظاهر">
+            <input type="text" id="add-songName" class="input-field" placeholder="اسم الأغنية">
+            <input type="text" id="add-pass" class="input-field" placeholder="رمز المرور للمتسابق">
+            <input type="text" id="add-img" class="input-field" placeholder="اسم صورة أو رابط (ali.jpg)">
+            <input type="text" id="add-song" class="input-field" placeholder="اسم ملف صوتي أو رابط (ali.mp3)">
+        `;
+
+        document.getElementById('modal-btn-cancel').style.display = 'block';
+        document.getElementById('modal-btn-cancel').onclick = closeModal;
+
+        const okBtn = document.getElementById('modal-btn-ok');
+        okBtn.onclick = function() {
+            const id = document.getElementById('add-id').value.trim();
+            const name = document.getElementById('add-name').value.trim();
+            const songName = document.getElementById('add-songName').value.trim();
+            const pass = document.getElementById('add-pass').value.trim();
+            const img = document.getElementById('add-img').value.trim() || "default.jpg";
+            const song = document.getElementById('add-song').value.trim() || "default.mp3";
+
+            if (!id || !name || !songName || !pass) {
+                alert("الرجاء تعبئة جميع الحقول الرئيسية!");
+                return;
+            }
+
+            db.ref('custom_friends/' + id).set({ id, name, songName, pass, img, song }).then(() => {
+                closeModal();
+                showAlert("نجاح", "تم إضافة المتسابق بنجاح!");
+            });
+        };
+        document.getElementById('custom-modal').classList.add('active');
+    }
+
+    function openEditFriendModal(id) {
+        const f = friends.find(item => item.id === id);
+        if (!f) return;
+
+        document.getElementById('modal-title').innerText = "✏️ تعديل بيانات: " + f.name;
+        document.getElementById('modal-body-content').innerHTML = `
+            <label style="display:block; text-align:right; font-size:0.8rem; color:#ffa502;">اسم المتسابق:</label>
+            <input type="text" id="edit-name" class="input-field" value="${f.name}">
+            <label style="display:block; text-align:right; font-size:0.8rem; color:#ffa502;">اسم الأغنية:</label>
+            <input type="text" id="edit-songName" class="input-field" value="${f.songName}">
+            <label style="display:block; text-align:right; font-size:0.8rem; color:#ffa502;">كلمة المرور:</label>
+            <input type="text" id="edit-pass" class="input-field" value="${f.pass}">
+        `;
+
+        document.getElementById('modal-btn-cancel').style.display = 'block';
+        document.getElementById('modal-btn-cancel').onclick = closeModal;
+
+        const okBtn = document.getElementById('modal-btn-ok');
+        okBtn.onclick = function() {
+            const name = document.getElementById('edit-name').value.trim();
+            const songName = document.getElementById('edit-songName').value.trim();
+            const pass = document.getElementById('edit-pass').value.trim();
+
+            if (!name || !songName || !pass) {
+                alert("لا يمكن ترك الحقول فارغة!");
+                return;
+            }
+
+            db.ref('custom_friends/' + id).update({ name, songName, pass }).then(() => {
+                closeModal();
+                showAlert("تم التعديل", "تم تحديث البيانات بنجاح!");
+            });
+        };
+        document.getElementById('custom-modal').classList.add('active');
+    }
+
+    function confirmDeleteFriend(id, name) {
+        showConfirm("تأكيد الحذف 🗑️", `هل أنت تأكد من حذفك للمتسابق (${name}) نهائياً؟`, function() {
+            db.ref('custom_friends/' + id).remove().then(() => {
+                showAlert("تم الحذف", "تم حذف المتسابق بنجاح!");
+            });
+        });
+    }
+
+    function resetModalBody() {
+        document.getElementById('modal-body-content').innerHTML = `
+            <p id="modal-msg"></p>
+            <div id="modal-input-container" style="display:none;">
+                <input type="password" id="modal-input" class="input-field" placeholder="أدخل كلمة المرور..." onkeyup="if(event.key==='Enter') document.getElementById('modal-btn-ok').click()">
+            </div>
+        `;
+    }
+
+    function showAlert(title, msg, onOk = null) {
+        resetModalBody();
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-msg').innerText = msg;
+        document.getElementById('modal-input-container').style.display = 'none';
+        document.getElementById('modal-btn-cancel').style.display = 'none';
+        
+        const okBtn = document.getElementById('modal-btn-ok');
+        okBtn.onclick = function() {
+            closeModal();
+            if (onOk) onOk();
+        };
+        document.getElementById('custom-modal').classList.add('active');
+    }
+
+    function showConfirm(title, msg, onConfirm) {
+        resetModalBody();
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-msg').innerText = msg;
+        document.getElementById('modal-input-container').style.display = 'none';
+        
+        const cancelBtn = document.getElementById('modal-btn-cancel');
+        cancelBtn.style.display = 'block';
+        cancelBtn.onclick = closeModal;
+
+        const okBtn = document.getElementById('modal-btn-ok');
+        okBtn.onclick = function() {
+            closeModal();
+            onConfirm();
+        };
+        document.getElementById('custom-modal').classList.add('active');
+    }
+
+    function showPrompt(title, msg, onSubmit) {
+        resetModalBody();
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-msg').innerText = msg;
+        
+        const inputContainer = document.getElementById('modal-input-container');
+        const input = document.getElementById('modal-input');
+        inputContainer.style.display = 'block';
+        input.value = '';
+
+        const cancelBtn = document.getElementById('modal-btn-cancel');
+        cancelBtn.style.display = 'block';
+        cancelBtn.onclick = closeModal;
+
+        const okBtn = document.getElementById('modal-btn-ok');
+        okBtn.onclick = function() {
+            const val = input.value.trim();
+            closeModal();
+            onSubmit(val);
+        };
+        document.getElementById('custom-modal').classList.add('active');
+        setTimeout(() => input.focus(), 100);
+    }
+
+    function closeModal() {
+        document.getElementById('custom-modal').classList.remove('active');
+    }
+
+    function getDeviceType() {
+        return /mobile/i.test(navigator.userAgent) ? "جوال 📱" : "كمبيوتر / بيسي 💻";
+    }
+
+    function trackSiteVisitor() {
+        const visitKey = db.ref('site_visits').push().key;
+        db.ref('site_visits/' + visitKey).set({
+            device: getDeviceType(),
+            timestamp: new Date().toLocaleString('ar-SA')
+        });
+    }
+    trackSiteVisitor();
+
+    function startApp() {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        currentPage = 0;
+        document.getElementById('page-0').classList.add('active');
+    }
+
+    function changePage(direction) {
+        document.querySelectorAll('audio').forEach(a => a.pause());
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('main-container').classList.remove('owner-container');
+
+        currentPage += direction;
+
+        if (currentPage < 0) {
+            document.getElementById('page-welcome').classList.add('active');
+            currentPage = -1;
+        } else if (currentPage < friends.length) {
+            document.getElementById(`page-${currentPage}`).classList.add('active');
+        } else {
+            document.getElementById('page-vote').classList.add('active');
+        }
+    }
+
+    function goToVotePage() {
+        document.querySelectorAll('audio').forEach(a => a.pause());
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('main-container').classList.remove('owner-container');
+        document.getElementById('page-vote').classList.add('active');
+        currentPage = friends.length;
+    }
+
+    function openOwnerPanel() {
+        showPrompt("لوحة المالك 🔒", "أدخل كلمة المرور الخاصة بالمالك:", function(pass) {
+            if (pass === ADMIN_PASSWORD) {
+                document.querySelectorAll('audio').forEach(a => a.pause());
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                
+                document.getElementById('main-container').classList.add('owner-container');
+                document.getElementById('page-owner').classList.add('active');
+                
+                loadOwnerData();
+            } else if (pass !== null && pass !== "") {
+                showAlert("خطأ", "كلمة المرور غير صحيحة!");
+            }
+        });
+    }
+
+    function loadOwnerData() {
+        renderUI();
+
+        db.ref('logs').on('value', (snapshot) => {
+            const logsData = snapshot.val() || {};
+            const logsDisplay = document.getElementById('logs-display');
+            logsDisplay.innerHTML = '';
+
+            const logsArray = Object.values(logsData).reverse();
+            if (logsArray.length === 0) {
+                logsDisplay.innerHTML = '<p style="color:#ccc; font-size:0.85rem;">لا توجد أصوات مسجلة حتى الآن.</p>';
+            } else {
+                logsArray.forEach(log => {
+                    logsDisplay.innerHTML += `
+                        <div class="log-item">
+                            قام <strong>${log.voterName}</strong> بالتصويت لصالح: <strong>${log.votedFor}</strong>
+                            <div class="log-details">
+                                <span>⏱️ ${log.timestamp}</span>
+                                <span class="device-tag">${log.device || "غير معروف"}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        });
+
+        db.ref('site_visits').on('value', (snapshot) => {
+            const visitsData = snapshot.val() || {};
+            const visitorsDisplay = document.getElementById('visitors-display');
+            visitorsDisplay.innerHTML = '';
+
+            const visitsArray = Object.values(visitsData).reverse();
+            if (visitsArray.length === 0) {
+                visitorsDisplay.innerHTML = '<p style="color:#ccc; font-size:0.85rem;">لا يوجد زوار مسجلين.</p>';
+            } else {
+                visitsArray.forEach(visit => {
+                    visitorsDisplay.innerHTML += `
+                        <div class="log-item visitor-item">
+                            دخل شخص الرابط عبر: <strong style="color:#2ed573;">${visit.device}</strong>
+                            <div class="log-details">
+                                <span>⏱️ ${visit.timestamp}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        });
+    }
+
+    function submitVote() {
+        const passInput = document.getElementById('user-pass').value.trim();
+        const selectedCandidate = document.querySelector('input[name="votedCandidate"]:checked');
+
+        if (!passInput) {
+            showAlert("تنبيه", "الرجاء كتابة كلمة المرور الخاصة بك أولاً!");
             return;
         }
 
-        // حفظ حالة التصويت في متصفح المستخدم
-        localStorage.setItem('hasVoted', 'true');
-        localStorage.setItem('myVote', candidateName);
+        const userObj = friends.find(f => f.pass === passInput);
 
-        // تعطيل أزرار التصويت وإظهار رسالة النجاح
-        lockVotingButtons('تم تسجيل صوتك لـ ' + candidateName + ' بنجاح! شكراً لك.');
-        alert('تم تسجيل صوتك بنجاح لـ ' + candidateName);
+        if (!userObj) {
+            showAlert("خطأ ❌", "كلمة المرور غير صحيحة، تأكد من كتابة الرمز بشكل صحيح!");
+            return;
+        }
+
+        if (!selectedCandidate) {
+            showAlert("تنبيه", "اختر شخصاً للتصويت له!");
+            return;
+        }
+
+        const candidateId = selectedCandidate.value;
+
+        if (userObj.id === candidateId) {
+            showAlert("ممنوع 🛑", "لا يمكنك التصويت لنفسك! اختر متسابقاً آخر.");
+            return;
+        }
+
+        const candidateObj = friends.find(f => f.id === candidateId);
+
+        db.ref('user_votes/' + userObj.id).once('value', (snapshot) => {
+            if (snapshot.exists()) {
+                showAlert("تنبيه", "لقد قمت بالتصويت سابقاً بهذا الحساب!", function() {
+                    showResults();
+                });
+                return;
+            }
+
+            const updates = {};
+            updates['user_votes/' + userObj.id] = candidateId;
+            
+            const newLogKey = db.ref('logs').push().key;
+            updates['logs/' + newLogKey] = {
+                voterName: userObj.name,
+                votedFor: candidateObj.name,
+                device: getDeviceType(),
+                timestamp: new Date().toLocaleString('ar-SA')
+            };
+
+            db.ref('votes/' + candidateId).transaction((curr) => (curr || 0) + 1);
+
+            db.ref().update(updates, (error) => {
+                if (!error) {
+                    showAlert("تم بنجاح", `تم تسجيل صوتك بنجاح يا ${userObj.name}!`, function() {
+                        showResults();
+                    });
+                } else {
+                    showAlert("خطأ", "حدث خطأ أثناء تسجيل الصوت.");
+                }
+            });
+        });
     }
 
-    function lockVotingButtons(message) {
-        const buttons = document.querySelectorAll('.vote-btn');
-        buttons.forEach(btn => {
-            btn.disabled = true;
-            btn.textContent = 'تم التصويت';
+    function showResults() {
+        document.querySelectorAll('audio').forEach(a => a.pause());
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('main-container').classList.remove('owner-container');
+        document.getElementById('page-results').classList.add('active');
+
+        db.ref('votes').on('value', (snapshot) => {
+            const data = snapshot.val() || {};
+            let totalVotes = 0;
+
+            friends.forEach(f => { totalVotes += (data[f.id] || 0); });
+
+            const resultsDisplay = document.getElementById('results-display');
+            resultsDisplay.innerHTML = '';
+
+            friends.forEach(f => {
+                const count = data[f.id] || 0;
+                const percentage = totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0;
+
+                resultsDisplay.innerHTML += `
+                    <div class="result-item">
+                        <div class="result-info">
+                            <span>${f.name}</span>
+                            <span>${count} أصوات (${percentage}%)</span>
+                        </div>
+                        <div class="bar-bg">
+                            <div class="bar-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('total-votes-text').innerText = `إجمالي الأصوات: ${totalVotes} صوت`;
         });
-        document.getElementById('status-msg').textContent = message;
+    }
+
+    function confirmResetAll() {
+        showConfirm("تأكيد التصفير ⚠️", "هل أنت تأكد من تصفير الأصوات والسجلات وسجل الزوار؟", function() {
+            db.ref('votes').remove();
+            db.ref('user_votes').remove();
+            db.ref('logs').remove();
+            db.ref('site_visits').remove().then(() => {
+                showAlert("نجاح", "تم تصفير كافة البيانات بنجاح مع الحفاظ على قائمة المتسابقين!");
+            });
+        });
     }
 </script>
+
 </body>
 </html>
