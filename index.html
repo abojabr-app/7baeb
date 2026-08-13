@@ -42,7 +42,6 @@
 
         .card { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 20px; border: 1px solid rgba(255,255,255,0.08); }
         
-        /* تعديل حجم الصور تلقائياً */
         .card img { 
             width: 100%; 
             height: auto; 
@@ -96,6 +95,36 @@
         .bar-bg { background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px; overflow: hidden; }
         .bar-fill { background: linear-gradient(90deg, #ffa502, #2ed573); height: 100%; width: 0%; border-radius: 5px; }
 
+        /* كارت الفائز النهائي */
+        .winner-card {
+            background: linear-gradient(135deg, rgba(255, 165, 2, 0.2), rgba(255, 215, 0, 0.05));
+            border: 2px solid #ffa502; border-radius: 15px; padding: 20px; margin-bottom: 20px;
+            box-shadow: 0 0 25px rgba(255, 165, 2, 0.3); text-align: center;
+        }
+        .winner-card img {
+            width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
+            border: 3px solid #ffa502; margin-bottom: 10px; box-shadow: 0 0 15px rgba(255, 165, 2, 0.5);
+        }
+        .winner-badge { font-size: 1.3rem; font-weight: bold; color: #ffa502; margin-bottom: 10px; }
+
+        /* تنسيقات كارت التعادل */
+        .tie-container {
+            display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 10px;
+        }
+        .tie-item {
+            display: flex; flex-direction: column; align-items: center; width: 110px;
+        }
+        .tie-item img {
+            width: 85px; height: 85px; border-radius: 50%; object-fit: cover;
+            border: 2px solid #eccc68; margin-bottom: 5px;
+        }
+        .tie-item span { font-size: 0.95rem; font-weight: bold; color: #fff; }
+
+        .leader-badge-box {
+            background: rgba(30, 144, 255, 0.15); border: 1px solid #1e90ff;
+            border-radius: 12px; padding: 12px; margin-bottom: 15px; font-weight: bold; color: #70a1ff;
+        }
+
         .admin-item {
             background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
             padding: 10px 12px; border-radius: 8px; margin-bottom: 8px;
@@ -108,16 +137,12 @@
         .btn-mini-edit { background: #ffa502; color: #000; }
         .btn-mini-delete { background: #ff4757; color: #fff; }
 
-        .owner-tabs {
-            display: flex; gap: 8px; margin-bottom: 15px; justify-content: center; flex-wrap: wrap;
-        }
+        .owner-tabs { display: flex; gap: 8px; margin-bottom: 15px; justify-content: center; flex-wrap: wrap; }
         .tab-btn {
             background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.15);
             color: #ccc; padding: 10px 16px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.9rem;
         }
-        .tab-btn.active {
-            background: #ffa502; color: #000; border-color: #ffa502; box-shadow: 0 4px 12px rgba(255,165,2,0.3);
-        }
+        .tab-btn.active { background: #ffa502; color: #000; border-color: #ffa502; box-shadow: 0 4px 12px rgba(255,165,2,0.3); }
 
         .tab-content { display: none; text-align: right; }
         .tab-content.active { display: block; animation: slideUp 0.2s ease-out; }
@@ -203,15 +228,16 @@
         <button class="btn-nav btn-prev" onclick="changePage(-1)">⬅️ الرجوع للأغاني</button>
     </div>
 
-    <!-- 4. صفحة النتائج (للزوار والأعضاء) -->
+    <!-- 4. صفحة النتائج -->
     <div class="page" id="page-results">
-        <h2>📊 نتائج الأصوات الحالية</h2>
+        <h2>📊 نتائج المسابقة</h2>
+        <div id="winner-display"></div>
         <div id="results-display"></div>
         <div class="total-count" id="total-votes-text" style="color:#2ed573; font-weight:bold; margin-top:10px;"></div>
         <button class="btn-nav btn-prev" style="margin-top:20px;" onclick="goToVotePage()">⬅️ العودة لصفحة التصويت</button>
     </div>
 
-    <!-- 5. صفحة المالك بنظام التبويبات المنفصلة -->
+    <!-- 5. صفحة المالك -->
     <div class="page" id="page-owner">
         <h2 style="color:#ffa502; margin-bottom:5px;">⚙️ لوحة تحكم المالك</h2>
         <p style="color:#ccc; font-size:0.85rem; margin-top:0; margin-bottom:15px;">اختر القائمة التي تريد عرضها فقط:</p>
@@ -224,7 +250,6 @@
         </div>
 
         <div class="single-display-box">
-            <!-- قائمة المتسابقين منفردة -->
             <div class="tab-content active" id="tab-friends">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <h3 style="color:#2ed573; margin:0;">قائمة المتسابقين</h3>
@@ -233,19 +258,16 @@
                 <div id="manage-friends-list"></div>
             </div>
 
-            <!-- سجل الأصوات منفرد -->
             <div class="tab-content" id="tab-logs">
                 <h3 style="color:#1e90ff; margin-top:0; margin-bottom:12px;">سجل تفاصيل التصويت</h3>
                 <div id="logs-display"></div>
             </div>
 
-            <!-- سجل الزوار منفرد -->
             <div class="tab-content" id="tab-visitors">
                 <h3 style="color:#eccc68; margin-top:0; margin-bottom:12px;">سجل من فتح الرابط</h3>
                 <div id="visitors-display"></div>
             </div>
 
-            <!-- الإعدادات وتصفير البيانات منفرد -->
             <div class="tab-content" id="tab-settings">
                 <h3 style="color:#ffa502; margin-top:0; margin-bottom:12px;">إعدادات الإدارة</h3>
                 <div style="display:flex; flex-direction:column; gap:12px; margin-top:20px;">
@@ -716,23 +738,97 @@
         });
     }
 
+    // --- صفحة النتائج التفاعلية الشاملة (مع دعم حالات التعادل بدقة) ---
     function showResults() {
         document.querySelectorAll('audio').forEach(a => a.pause());
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById('main-container').classList.remove('owner-container');
         document.getElementById('page-results').classList.add('active');
 
-        db.ref('votes').on('value', (snapshot) => {
-            const data = snapshot.val() || {};
+        db.ref().on('value', (snapshot) => {
+            const allData = snapshot.val() || {};
+            const votesData = allData.votes || {};
+            const userVotesData = allData.user_votes || {};
+
             let totalVotes = 0;
+            friends.forEach(f => { totalVotes += (votesData[f.id] || 0); });
 
-            friends.forEach(f => { totalVotes += (data[f.id] || 0); });
+            const votedUsersCount = Object.keys(userVotesData).length;
+            const totalFriendsCount = friends.length;
+            const isFinished = votedUsersCount >= totalFriendsCount && totalFriendsCount > 0;
 
+            const winnerDisplay = document.getElementById('winner-display');
             const resultsDisplay = document.getElementById('results-display');
+            
+            winnerDisplay.innerHTML = '';
             resultsDisplay.innerHTML = '';
 
+            // حساب أعلى عدد أصوات
+            let maxVotes = 0;
             friends.forEach(f => {
-                const count = data[f.id] || 0;
+                const count = votesData[f.id] || 0;
+                if (count > maxVotes) maxVotes = count;
+            });
+
+            // معرفة كل الأشخاص المصنّفين كأعلى أصوات (لتحديد التعادل)
+            let topCandidates = [];
+            if (maxVotes > 0) {
+                topCandidates = friends.filter(f => (votesData[f.id] || 0) === maxVotes);
+            }
+
+            if (topCandidates.length > 1) {
+                // حالة التعادل (بين شخصين أو أكثر)
+                const namesList = topCandidates.map(c => c.name).join(' و ');
+                let tieImagesHTML = '';
+                topCandidates.forEach(c => {
+                    tieImagesHTML += `
+                        <div class="tie-item">
+                            <img src="${c.img}" onerror="this.src='https://via.placeholder.com/100/2f3542/ffffff?text=${encodeURIComponent(c.name)}'" alt="${c.name}">
+                            <span>${c.name}</span>
+                        </div>
+                    `;
+                });
+
+                if (isFinished) {
+                    winnerDisplay.innerHTML = `
+                        <div class="winner-card" style="border-color:#eccc68;">
+                            <div class="winner-badge" style="color:#eccc68;">🤝 تعادل حاسم بين (${namesList}) 🤝</div>
+                            <div class="tie-container">${tieImagesHTML}</div>
+                            <div style="color:#2ed573; font-weight:bold; margin-top:10px;">بـ (${maxVotes}) أصوات لكل منهما!</div>
+                        </div>
+                    `;
+                } else {
+                    winnerDisplay.innerHTML = `
+                        <div class="winner-card" style="border-color:#1e90ff; background:rgba(30,144,255,0.1);">
+                            <div class="winner-badge" style="color:#70a1ff;">🔥 تعادل متصدر حالياً بين (${namesList}) 🔥</div>
+                            <div class="tie-container">${tieImagesHTML}</div>
+                            <div style="color:#ffa502; font-weight:bold; margin-top:10px;">بـ (${maxVotes}) أصوات لكل منهما</div>
+                        </div>
+                    `;
+                }
+            } else if (topCandidates.length === 1) {
+                const topCandidate = topCandidates[0];
+                if (isFinished) {
+                    winnerDisplay.innerHTML = `
+                        <div class="winner-card">
+                            <div class="winner-badge">👑 الفائز بـ احلى بارت 👑</div>
+                            <img src="${topCandidate.img}" onerror="this.src='https://via.placeholder.com/150/2f3542/ffffff?text=${encodeURIComponent(topCandidate.name)}'" alt="${topCandidate.name}">
+                            <h2 style="margin:5px 0; color:#fff;">${topCandidate.name}</h2>
+                            <div style="color:#2ed573; font-weight:bold;">🏆 حصد ${maxVotes} أصوات 🏆</div>
+                        </div>
+                    `;
+                } else {
+                    winnerDisplay.innerHTML = `
+                        <div class="leader-badge-box">
+                            🔥 المتصدر حالياً: <span style="color:#ffa502; font-size:1.1rem; font-weight:bold;">${topCandidate.name}</span> بـ (${maxVotes}) أصوات
+                        </div>
+                    `;
+                }
+            }
+
+            // عرض الأشرطة والنسب لكل المتسابقين
+            friends.forEach(f => {
+                const count = votesData[f.id] || 0;
                 const percentage = totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0;
 
                 resultsDisplay.innerHTML += `
@@ -748,7 +844,7 @@
                 `;
             });
 
-            document.getElementById('total-votes-text').innerText = `إجمالي الأصوات: ${totalVotes} صوت`;
+            document.getElementById('total-votes-text').innerText = `إجمالي التصويت: (${votedUsersCount} من ${totalFriendsCount}) صوتوا`;
         });
     }
 
